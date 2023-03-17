@@ -26,17 +26,17 @@ class AppCoordinator: Coordinator {
     }
     
     func start() {
-        let loginViewController = MoviesListViewController()
-        let loginViewModel = DetailsViewModel.init()
-        loginViewModel.appCoordinator = self
-        loginViewController.detailsVMObj = loginViewModel
-        navigationController.pushViewController(loginViewController, animated: true)
+        let movieListVC = MoviesListViewController()
+        let moviesDetailVM = DetailsCoordinator.init()
+        moviesDetailVM.appCoordinator = self
+        movieListVC.detailsCoorinator = moviesDetailVM
+        navigationController.pushViewController(movieListVC, animated: true)
     }
     
-    func showDetails(movieDetails: MoviesCellViewModel) {
+    func showDetails(movieDetails: MovieDetails) {
         let deatilsVC = DetailsViewController()
         deatilsVC.movieItem = movieDetails
         navigationController.pushViewController(deatilsVC, animated: true)
-            
+        
     }
 }

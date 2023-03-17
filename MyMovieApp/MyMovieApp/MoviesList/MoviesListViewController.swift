@@ -14,27 +14,24 @@ struct ListItem {
 
 
 class MoviesListViewController: UIViewController,UITableViewDelegate,UITableViewDataSource {
-    var detailsVMObj = DetailsViewModel()
+    var detailsCoorinator = DetailsCoordinator()
     
     lazy var viewModel = {
         MovieViewModel()
     }()
     
-    let tableView: UITableView = {
-        let tableView = UITableView()
+    lazy var tableView: UITableView = {
+        let tableView = UITableView(frame: view.bounds, style: .grouped)
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
         tableView.register(MoviesListTableCell.self, forCellReuseIdentifier: MoviesListTableCell.identifier)
         tableView.tableFooterView = UIView()
         return tableView
     }()
     
-
-    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(false, animated: true)
     }
-    
     
     override func viewDidLoad() {
         self.view.backgroundColor = .white
@@ -53,7 +50,7 @@ class MoviesListViewController: UIViewController,UITableViewDelegate,UITableView
             }
         }
     }
-
+    
     
     private func setupUI() {
         view.addSubview(tableView)
@@ -63,11 +60,11 @@ class MoviesListViewController: UIViewController,UITableViewDelegate,UITableView
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-            return section == 0 ?  1 : viewModel.movies.count
+        return section == 0 ? 1 : viewModel.sections[section].movies.count
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 2
+        return viewModel.sections.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -75,8 +72,7 @@ class MoviesListViewController: UIViewController,UITableViewDelegate,UITableView
         
         if indexPath.section  == 0 {
             let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
-            cell.textLabel?.text = "jkhjkhjhjh"
-           
+            cell.textLabel?.text = "jkhjkhjhjh"            
             return cell
         }
         else {
@@ -92,12 +88,30 @@ class MoviesListViewController: UIViewController,UITableViewDelegate,UITableView
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let cellVM = viewModel.getCellViewModel(at: indexPath)
-        detailsVMObj.appCoordinator.showDetails(movieDetails: cellVM)
+        detailsCoorinator.appCoordinator.showDetails(movieDetails: cellVM)
+    }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return CGFloat(50)
+    }
+    
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let view = UIView()
+        view.backgroundColor = .clear
+        let label = UILabel()
+        label.frame = CGRect(x:10, y: 0, width: tableView.bounds.width - 20 , height: 44)
+        label.text = viewModel.sections[section].name
+        label.font = UIFont.boldSystemFont(ofSize: 16)
+        label.textColor = .blue
+      
+        view.addSubview(label)
+        return view
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return indexPath.section == 0 ?  200 : 50
     }
-
+    
 }
 

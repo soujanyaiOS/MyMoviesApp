@@ -13,8 +13,7 @@ enum APIEndpoint {
     
     var url: URL {
         switch self {
-       
-            
+        
         case .getMoviesData:
             let urlString = "https://61efc467732d93001778e5ac.mockapi.io/movies/list"
             return URL(string: urlString)!
@@ -22,15 +21,12 @@ enum APIEndpoint {
         case .getFavourites:
             let urlString = "https://61efc467732d93001778e5ac.mockapi.io/movies/favorites"
             return URL(string: urlString)!
-            
-            
+                    
         }
     }
     
     var httpMethod: String {
         switch self {
-      
-            
         case .getMoviesData:
             return "GET"
         case .getFavourites:

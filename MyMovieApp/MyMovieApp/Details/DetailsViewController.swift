@@ -7,41 +7,21 @@
 
 import UIKit
 
-
-
 class DetailsViewController: UIViewController {
-   // let item: ListItem
     var viewModel =  MovieViewModel()
-   
-//    init(item: ListItem) {
-//        self.item = item
-//        super.init(nibName: nil, bundle: nil)
-//        title = item.title
-//    }
     let label = UILabel()
     
-    var movieItem: MoviesCellViewModel? {
+    var movieItem: MovieDetails? {
         didSet {
             label.text = movieItem?.title
-           
-          
         }
     }
     
-//    required init?(coder: NSCoder) {
-//        fatalError("init(coder:) has not been implemented")
-//    }
-    
     override func viewDidLoad() {
-        // viewModel.showDetailsScreen()
         super.viewDidLoad()
         view.backgroundColor = .white
-        
-       
-      //  label.text = item.details
         label.numberOfLines = 0
         view.addSubview(label)
-        
         label.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             label.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),

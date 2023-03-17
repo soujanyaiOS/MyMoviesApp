@@ -22,7 +22,7 @@ class MoviesListTableCell: UITableViewCell {
     
     class var identifier: String { return String(describing: MoviesListTableCell.self)}
     
-    var cellViewModel: MoviesCellViewModel? {
+    var cellViewModel: MovieDetails? {
         didSet {
             movieTitleLabel.text = cellViewModel?.title
            

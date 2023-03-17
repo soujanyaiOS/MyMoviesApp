@@ -65,8 +65,7 @@ extension UIStackView {
         }
         if let bottom = bottom {
             bottomAnchor.constraint(equalTo: bottom, constant: -paddingTop).isActive = true
-        }
-        
+        }        
         
     }
 }
