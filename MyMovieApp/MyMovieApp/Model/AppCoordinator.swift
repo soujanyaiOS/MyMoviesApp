@@ -29,14 +29,14 @@ class AppCoordinator: Coordinator {
         let loginViewController = MoviesListViewController()
         let loginViewModel = DetailsViewModel.init()
         loginViewModel.appCoordinator = self
-        loginViewController.viewModel = loginViewModel
+        loginViewController.detailsVMObj = loginViewModel
         navigationController.pushViewController(loginViewController, animated: true)
     }
     
-    func showDetails() {
-        let item =    ListItem(title: "Item 1", details: "Details for Item 1")
-        let loginViewController = DetailsViewController(item: item)
-        navigationController.pushViewController(loginViewController, animated: true)
+    func showDetails(movieDetails: MoviesCellViewModel) {
+        let deatilsVC = DetailsViewController()
+        deatilsVC.movieItem = movieDetails
+        navigationController.pushViewController(deatilsVC, animated: true)
             
     }
 }

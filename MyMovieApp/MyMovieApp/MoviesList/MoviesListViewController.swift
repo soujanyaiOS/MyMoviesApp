@@ -14,20 +14,21 @@ struct ListItem {
 
 
 class MoviesListViewController: UIViewController,UITableViewDelegate,UITableViewDataSource {
-    var viewModel = DetailsViewModel()
-    lazy var tableView =  UITableView()
-    var coordinator: AppCoordinator?
+    var detailsVMObj = DetailsViewModel()
     
-    let items = [
-        ListItem(title: "Item 1", details: "Details Item 1"),
-        ListItem(title: "Item 2", details: "Details Item 2"),
-        ListItem(title: "Item 3", details: "Details Item 3")
-    ]
+    lazy var viewModel = {
+        MovieViewModel()
+    }()
     
+    let tableView: UITableView = {
+        let tableView = UITableView()
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
+        tableView.register(MoviesListTableCell.self, forCellReuseIdentifier: MoviesListTableCell.identifier)
+        tableView.tableFooterView = UIView()
+        return tableView
+    }()
     
-    @objc func showDetails() {
-        coordinator?.showDetails()
-    }
+
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -39,35 +40,64 @@ class MoviesListViewController: UIViewController,UITableViewDelegate,UITableView
         self.view.backgroundColor = .white
         edgesForExtendedLayout = .all
         super.viewDidLoad()
-        title = "List"
+        title = "Movies App"
         setupUI()
+        initViewModel()
     }
+    
+    func initViewModel() {
+        viewModel.getMovies()
+        viewModel.reloadTableView = {[weak self] in
+            DispatchQueue.main.async {
+                self?.tableView.reloadData()
+            }
+        }
+    }
+
     
     private func setupUI() {
         view.addSubview(tableView)
-        tableView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
-        tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-        tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
+        tableView.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leadingAnchor, right: view.trailingAnchor, paddingTop: 10, paddingLeft: 10, paddingRight: 10, bottom: view.safeAreaLayoutGuide.bottomAnchor)
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return items.count
+            return section == 0 ?  1 : viewModel.movies.count
+    }
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 2
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
-        cell.textLabel?.text = items[indexPath.row].title
-        return cell
+        var cell: UITableViewCell?
+        
+        if indexPath.section  == 0 {
+            let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
+            cell.textLabel?.text = "jkhjkhjhjh"
+           
+            return cell
+        }
+        else {
+            if let cell1 = tableView.dequeueReusableCell(withIdentifier: "MoviesListTableCell", for: indexPath) as? MoviesListTableCell{
+                let cellVM = viewModel.getCellViewModel(at: indexPath)
+                cell1.cellViewModel = cellVM
+                return cell1
+                
+            }
+        }
+        return cell ?? UITableViewCell()
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        viewModel.appCoordinator.showDetails()
+        let cellVM = viewModel.getCellViewModel(at: indexPath)
+        detailsVMObj.appCoordinator.showDetails(movieDetails: cellVM)
     }
     
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return indexPath.section == 0 ?  200 : 50
+    }
+
 }
 

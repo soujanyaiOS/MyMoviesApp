@@ -10,6 +10,6 @@ class DetailsViewModel {
     weak var appCoordinator : AppCoordinator!
    
     func goToMovieDetails(){
-        appCoordinator.showDetails()
+       // appCoordinator.showDetails()
     }
 }
