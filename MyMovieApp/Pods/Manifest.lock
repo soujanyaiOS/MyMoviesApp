@@ -1,0 +1,22 @@
+PODS:
+  - SDWebImage (5.12.1):
+    - SDWebImage/Core (= 5.12.1)
+  - SDWebImage/Core (5.12.1)
+  - SwiftLoader (1.0.0)
+
+DEPENDENCIES:
+  - SDWebImage (~> 5.0)
+  - SwiftLoader (= 1.0.0)
+
+SPEC REPOS:
+  trunk:
+    - SDWebImage
+    - SwiftLoader
+
+SPEC CHECKSUMS:
+  SDWebImage: 4dc3e42d9ec0c1028b960a33ac6b637bb432207b
+  SwiftLoader: f12f3a6fb42576862a3a5eb80c7e59fc881b6982
+
+PODFILE CHECKSUM: 1476b01eda88e5ada117ea6ac6fc0a05152bfa9a
+
+COCOAPODS: 1.11.3

@@ -10,6 +10,7 @@ enum APIEndpoint {
  
     case getMoviesData
     case getFavourites
+    case movieImage(id: String)
     
     var url: URL {
         switch self {
@@ -21,6 +22,10 @@ enum APIEndpoint {
         case .getFavourites:
             let urlString = "https://61efc467732d93001778e5ac.mockapi.io/movies/favorites"
             return URL(string: urlString)!
+            
+        case .movieImage(let id):
+            let urlString = "https://image.tmdb.org/t/p/w500\(id)"
+            return URL(string: urlString)!
                     
         }
     }
@@ -30,6 +35,9 @@ enum APIEndpoint {
         case .getMoviesData:
             return "GET"
         case .getFavourites:
+            return "GET"
+            
+        case .movieImage:
             return "GET"
         }
     }

@@ -22,8 +22,8 @@ class MoviesListViewController: UIViewController,UITableViewDelegate,UITableView
     
     lazy var tableView: UITableView = {
         let tableView = UITableView(frame: view.bounds, style: .grouped)
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
         tableView.register(MoviesListTableCell.self, forCellReuseIdentifier: MoviesListTableCell.identifier)
+        tableView.register(HorizontalTableViewCell.self, forCellReuseIdentifier: HorizontalTableViewCell.identifier)
         tableView.tableFooterView = UIView()
         return tableView
     }()
@@ -56,7 +56,8 @@ class MoviesListViewController: UIViewController,UITableViewDelegate,UITableView
         view.addSubview(tableView)
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leadingAnchor, right: view.trailingAnchor, paddingTop: 10, paddingLeft: 10, paddingRight: 10, bottom: view.safeAreaLayoutGuide.bottomAnchor)
+        
+        tableView.anchorView(top: view.safeAreaLayoutGuide.topAnchor, left: view.leadingAnchor, right: view.trailingAnchor, paddingTop: 1, paddingLeft: 10, paddingRight: 10, bottom: view.bottomAnchor)
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -71,9 +72,13 @@ class MoviesListViewController: UIViewController,UITableViewDelegate,UITableView
         var cell: UITableViewCell?
         
         if indexPath.section  == 0 {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
-            cell.textLabel?.text = "jkhjkhjhjh"            
-            return cell
+            if let cell1 = tableView.dequeueReusableCell(withIdentifier: "HorizontalTableViewCell", for: indexPath) as? HorizontalTableViewCell{
+                let cellVM = viewModel.sections[indexPath.section].movies
+                cell1.detailsCoorinator = detailsCoorinator
+                cell1.cellViewModel = cellVM
+                return cell1
+                
+            }
         }
         else {
             if let cell1 = tableView.dequeueReusableCell(withIdentifier: "MoviesListTableCell", for: indexPath) as? MoviesListTableCell{
@@ -104,7 +109,6 @@ class MoviesListViewController: UIViewController,UITableViewDelegate,UITableView
         label.text = viewModel.sections[section].name
         label.font = UIFont.boldSystemFont(ofSize: 16)
         label.textColor = .blue
-      
         view.addSubview(label)
         return view
     }

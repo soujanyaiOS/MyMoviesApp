@@ -6,7 +6,7 @@
 //
 
 import Foundation
-
+import SwiftLoader
 protocol  MoviesListNetworkManagerProtocal {
     func getMoviesData(completion: @escaping(Result<MovieResponse,Error>) -> Void)
     func getFavoritesList(completion: @escaping(Result<FavoriteResponse,Error>) -> Void)
@@ -27,8 +27,10 @@ class MoviesListNetworkManager:  MoviesListNetworkManagerProtocal {
     private func loadResources<T: Decodable>(from path: URL,
                                              completion: @escaping(Result<T,Error>) -> Void) {
         
+        SwiftLoader.show(animated: true)
         let urlSession = URLSession(configuration: .default).dataTask(with: path) { (data, _, error) in
             
+            SwiftLoader.hide()
             if let error = error {
                 completion(.failure(error))
             }
