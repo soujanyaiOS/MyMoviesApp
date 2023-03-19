@@ -17,18 +17,19 @@ class MoviesListTableCell: UITableViewCell {
         img.imageCorners(20)
         return img
     }()
-    
+
+   
     class var identifier: String { return String(describing: MoviesListTableCell.self)}
     
     var cellViewModel: MovieDetails? {
         didSet {
             movieTitleLabel.text = cellViewModel?.title
             let endpoint = APIEndpoint.movieImage(id: cellViewModel?.poster_path ?? "")
-            
+            self.contentView.backgroundColor = viewModel.backgroundColor(forMovieId: cellViewModel?.id ?? 0)
             self.movieImageView.sd_setImage(with: endpoint.url, placeholderImage: placeholderImage, options: SDWebImageOptions(rawValue: 0), completed: { (image, error, cacheType, imageURL) in
                 if( error != nil)
                 {
-                    debugPrint("Error loading image" )
+                    //debugPrint("Error loading image" )
                 }
             })
         }
@@ -57,8 +58,6 @@ class MoviesListTableCell: UITableViewCell {
         
         movieImageView.anchorView(top: self.containerView.topAnchor, left: self.containerView.leadingAnchor, right: self.containerView.leadingAnchor, paddingTop: 2, paddingLeft: 2, paddingRight: self.containerView.frame.width - 45, bottom: self.containerView.bottomAnchor)
         
-        
-       
     }
     
     required init?(coder aDecoder: NSCoder) {

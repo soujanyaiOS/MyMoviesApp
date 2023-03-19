@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import ToastViewSwift
 
 struct ListItem {
     let title: String
@@ -15,16 +16,18 @@ struct ListItem {
 
 class MoviesListViewController: UIViewController,UITableViewDelegate,UITableViewDataSource {
     var detailsCoorinator = DetailsCoordinator()
-    
+    var movieObj = MovieDetails()
     lazy var viewModel = {
         MovieViewModel()
     }()
     
+    let nextButton = UIButton(type: .system)
     lazy var tableView: UITableView = {
         let tableView = UITableView(frame: view.bounds, style: .grouped)
         tableView.register(MoviesListTableCell.self, forCellReuseIdentifier: MoviesListTableCell.identifier)
         tableView.register(HorizontalTableViewCell.self, forCellReuseIdentifier: HorizontalTableViewCell.identifier)
         tableView.tableFooterView = UIView()
+        tableView.backgroundColor = .clear
         return tableView
     }()
     
@@ -42,11 +45,40 @@ class MoviesListViewController: UIViewController,UITableViewDelegate,UITableView
         initViewModel()
     }
     
+    @objc func showDetails() {
+        if  !movieObj.title.isEmpty {
+            self.detailsCoorinator.appCoordinator.showDetails(movieDetails: self.movieObj )
+        }
+        else {
+            let toast = Toast.text("Please select any movie to show details")
+            toast.show()
+        }
+        
+    }
+    
+    private func nextButtonSetup() {
+        nextButton.backgroundColor = .black
+        nextButton.setTitleColor(.white, for: .normal)
+        nextButton.setTitle("Next", for: .normal)
+        self.view.addSubview(nextButton)
+        nextButton.addTarget(self, action: #selector(showDetails), for: .touchUpInside)
+        nextButton.anchorTable(top: nil,
+                               leading: nil,
+                               bottom: view.safeAreaLayoutGuide.bottomAnchor,
+                               trailing: nil,
+                               paddingBottom: 0,
+                               width: self.tableView.frame.width - 20,
+                               height: 44)
+        nextButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+    }
+    
     func initViewModel() {
         viewModel.getMovies()
         viewModel.reloadTableView = {[weak self] in
             DispatchQueue.main.async {
                 self?.tableView.reloadData()
+                self?.nextButtonSetup()
+                self?.view.bringSubviewToFront(self!.nextButton)
             }
         }
     }
@@ -56,8 +88,12 @@ class MoviesListViewController: UIViewController,UITableViewDelegate,UITableView
         view.addSubview(tableView)
         tableView.delegate = self
         tableView.dataSource = self
+        tableView.anchorTable(top: view.topAnchor,
+                              leading: view.leadingAnchor,
+                              bottom: view.safeAreaLayoutGuide.bottomAnchor,
+                              trailing: view.trailingAnchor)
         
-        tableView.anchorView(top: view.safeAreaLayoutGuide.topAnchor, left: view.leadingAnchor, right: view.trailingAnchor, paddingTop: 1, paddingLeft: 10, paddingRight: 10, bottom: view.bottomAnchor)
+        
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -73,8 +109,8 @@ class MoviesListViewController: UIViewController,UITableViewDelegate,UITableView
         
         if indexPath.section  == 0 {
             if let cell1 = tableView.dequeueReusableCell(withIdentifier: "HorizontalTableViewCell", for: indexPath) as? HorizontalTableViewCell{
+                cell1.delegate = self
                 let cellVM = viewModel.sections[indexPath.section].movies
-                cell1.detailsCoorinator = detailsCoorinator
                 cell1.cellViewModel = cellVM
                 return cell1
                 
@@ -83,6 +119,7 @@ class MoviesListViewController: UIViewController,UITableViewDelegate,UITableView
         else {
             if let cell1 = tableView.dequeueReusableCell(withIdentifier: "MoviesListTableCell", for: indexPath) as? MoviesListTableCell{
                 let cellVM = viewModel.getCellViewModel(at: indexPath)
+                cell1.contentView.backgroundColor = viewModel.backgroundColor(forMovieId: cellVM.id)
                 cell1.cellViewModel = cellVM
                 return cell1
                 
@@ -92,30 +129,49 @@ class MoviesListViewController: UIViewController,UITableViewDelegate,UITableView
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let cellVM = viewModel.getCellViewModel(at: indexPath)
-        detailsCoorinator.appCoordinator.showDetails(movieDetails: cellVM)
+        
+        movieObj = viewModel.getCellViewModel(at: indexPath)
+        viewModel.didSelectRowAt(movieId: movieObj.id)
+        if let cell = tableView.cellForRow(at: indexPath) {
+            cell.contentView.backgroundColor = viewModel.backgroundColor(forMovieId: movieObj.id)
+        }
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return CGFloat(50)
+        return CGFloat(40)
     }
     
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let view = UIView()
-        view.backgroundColor = .clear
+        view.backgroundColor = .darkGray
+        view.layer.cornerRadius = 5
         let label = UILabel()
         label.frame = CGRect(x:10, y: 0, width: tableView.bounds.width - 20 , height: 44)
         label.text = viewModel.sections[section].name
         label.font = UIFont.boldSystemFont(ofSize: 16)
-        label.textColor = .blue
+        label.textColor = .white
         view.addSubview(label)
         return view
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return indexPath.section == 0 ?  200 : 50
+        return indexPath.section == 0 ?  150 : 50
     }
     
+    func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
+        // Reset the background color of the deselected cell
+        if let cell = tableView.cellForRow(at: indexPath) {
+            cell.contentView.backgroundColor = .clear
+        }
+    }
+    
+}
+
+extension MoviesListViewController : HorizontalTableViewCellDelegate {
+    func movieCellHorizontalDelegate( didselect item: MovieDetails) {
+        movieObj = item
+        
+    }
 }
 

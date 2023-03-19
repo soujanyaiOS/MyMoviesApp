@@ -6,6 +6,7 @@ target 'MyMovieApp' do
   use_frameworks!
 pod 'SDWebImage', '~> 5.0'
 pod 'SwiftLoader', '1.0.0'
+pod "ToastViewSwift"
 
 
   # Pods for MyMovieApp

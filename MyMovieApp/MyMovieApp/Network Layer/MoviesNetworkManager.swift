@@ -7,6 +7,41 @@
 
 import Foundation
 import SwiftLoader
+
+class MockApiService: MoviesListNetworkManagerProtocal {
+    func getMoviesData(completion: @escaping(Result<MovieResponse,Error>) -> Void) {
+        if let url = Bundle.main.url(forResource: "Movies", withExtension: "json") {
+            
+           
+            do {
+                let data = try Data(contentsOf: url)
+                let decoder = JSONDecoder()
+                let jsonData = try decoder.decode(MovieResponse.self, from: data)
+                print(jsonData)
+                completion(.success(jsonData))
+            } catch {
+                print("error decoding")
+            }
+        }
+    }
+    
+    func getFavoritesList(completion: @escaping(Result<FavoriteResponse,Error>) -> Void) {
+        if let url = Bundle.main.url(forResource: "Favourites", withExtension: "json") {
+
+            do {
+                let data = try Data(contentsOf: url)
+                let decoder = JSONDecoder()
+                let jsonData = try decoder.decode(FavoriteResponse.self, from: data)
+                print(jsonData)
+                completion(.success(jsonData))
+            } catch {
+                print("error decoding")
+            }
+        }
+    }
+}
+
+
 protocol  MoviesListNetworkManagerProtocal {
     func getMoviesData(completion: @escaping(Result<MovieResponse,Error>) -> Void)
     func getFavoritesList(completion: @escaping(Result<FavoriteResponse,Error>) -> Void)
