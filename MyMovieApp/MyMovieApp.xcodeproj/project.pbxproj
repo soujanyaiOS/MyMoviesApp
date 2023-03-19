@@ -179,14 +179,12 @@
 		35439A1029BFA2270044D982 /* MyMovieApp */ = {
 			isa = PBXGroup;
 			children = (
+				35439A9029C754C30044D982 /* Start Up */,
 				35439A8A29C66B6F0044D982 /* Coordinator */,
 				35439A8B29C66B810044D982 /* Data */,
-				35439A8C29C66BA00044D982 /* Screens */,
+				35439A8C29C66BA00044D982 /* Controlllers */,
 				35439A6629C3A2BE0044D982 /* Network Layer */,
-				35439A1129BFA2270044D982 /* AppDelegate.swift */,
-				35439A1329BFA2270044D982 /* SceneDelegate.swift */,
-				35439A1A29BFA2270044D982 /* Assets.xcassets */,
-				35439A1C29BFA2270044D982 /* LaunchScreen.storyboard */,
+				35439A8F29C754970044D982 /* Resources */,
 				35439A1F29BFA2270044D982 /* Info.plist */,
 			);
 			path = MyMovieApp;
@@ -286,13 +284,31 @@
 			path = Data;
 			sourceTree = "<group>";
 		};
-		35439A8C29C66BA00044D982 /* Screens */ = {
+		35439A8C29C66BA00044D982 /* Controlllers */ = {
 			isa = PBXGroup;
 			children = (
 				35439A4329BFB9000044D982 /* MoviesList */,
 				35439A4429BFB90C0044D982 /* Details */,
 			);
-			path = Screens;
+			path = Controlllers;
+			sourceTree = "<group>";
+		};
+		35439A8F29C754970044D982 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				35439A1A29BFA2270044D982 /* Assets.xcassets */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		35439A9029C754C30044D982 /* Start Up */ = {
+			isa = PBXGroup;
+			children = (
+				35439A1129BFA2270044D982 /* AppDelegate.swift */,
+				35439A1329BFA2270044D982 /* SceneDelegate.swift */,
+				35439A1C29BFA2270044D982 /* LaunchScreen.storyboard */,
+			);
+			path = "Start Up";
 			sourceTree = "<group>";
 		};
 		C6092452E448B0A207E1A833 /* Frameworks */ = {

@@ -13,15 +13,16 @@ struct ListItem {
     let details: String
 }
 
-
 class MoviesListViewController: UIViewController,UITableViewDelegate,UITableViewDataSource {
     var detailsCoorinator = DetailsCoordinator()
     var movieObj = MovieDetails()
+  
     lazy var viewModel = {
         MovieViewModel()
     }()
     
     let nextButton = UIButton(type: .system)
+  
     lazy var tableView: UITableView = {
         let tableView = UITableView(frame: view.bounds, style: .grouped)
         tableView.register(MoviesListTableCell.self, forCellReuseIdentifier: MoviesListTableCell.identifier)
@@ -111,15 +112,15 @@ class MoviesListViewController: UIViewController,UITableViewDelegate,UITableView
             if let cell1 = tableView.dequeueReusableCell(withIdentifier: "HorizontalTableViewCell", for: indexPath) as? HorizontalTableViewCell{
                 cell1.delegate = self
                 let cellVM = viewModel.sections[indexPath.section].movies
+                cell1.movieID = viewModel.selectedMovieId
                 cell1.cellViewModel = cellVM
                 return cell1
-                
             }
         }
         else {
             if let cell1 = tableView.dequeueReusableCell(withIdentifier: "MoviesListTableCell", for: indexPath) as? MoviesListTableCell{
                 let cellVM = viewModel.getCellViewModel(at: indexPath)
-                cell1.contentView.backgroundColor = viewModel.backgroundColor(forMovieId: cellVM.id)
+                cell1.movieID = viewModel.selectedMovieId
                 cell1.cellViewModel = cellVM
                 return cell1
                 
@@ -129,12 +130,8 @@ class MoviesListViewController: UIViewController,UITableViewDelegate,UITableView
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
         movieObj = viewModel.getCellViewModel(at: indexPath)
-        viewModel.didSelectRowAt(movieId: movieObj.id)
-        if let cell = tableView.cellForRow(at: indexPath) {
-            cell.contentView.backgroundColor = viewModel.backgroundColor(forMovieId: movieObj.id)
-        }
+        viewModel.selectedMovieId = movieObj.id
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
@@ -158,20 +155,12 @@ class MoviesListViewController: UIViewController,UITableViewDelegate,UITableView
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return indexPath.section == 0 ?  150 : 50
     }
-    
-    func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
-        // Reset the background color of the deselected cell
-        if let cell = tableView.cellForRow(at: indexPath) {
-            cell.contentView.backgroundColor = .clear
-        }
-    }
-    
 }
 
 extension MoviesListViewController : HorizontalTableViewCellDelegate {
     func movieCellHorizontalDelegate( didselect item: MovieDetails) {
         movieObj = item
-        
+        viewModel.selectedMovieId = movieObj.id
     }
 }
 

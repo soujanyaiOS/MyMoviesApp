@@ -9,12 +9,19 @@ import UIKit
 
 
 protocol HorizontalTableViewCellDelegate: AnyObject {
-    func movieCellHorizontalDelegate( didselect item: MovieDetails)
+    func movieCellHorizontalDelegate( didselect item: MovieDetails)   
 }
 
 class HorizontalTableViewCell: UITableViewCell {
     class var identifier: String { return String(describing: HorizontalTableViewCell.self)}
+    
     var cellViewModel: [MovieDetails]? {
+        didSet {
+            collectionView.reloadData()
+        }
+    }
+    
+    var movieID: Int = -1 {
         didSet {
             collectionView.reloadData()
         }
@@ -67,28 +74,18 @@ extension HorizontalTableViewCell: UICollectionViewDataSource,UICollectionViewDe
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "HorizontalCollectionViewCell", for: indexPath) as! HorizontalCollectionViewCell
+        cell.movieID = movieID
         cell.cellViewModel =  cellViewModel?[indexPath.item]
         return cell
     }
     
     internal func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let cellVM = cellViewModel?[indexPath.item] ?? MovieDetails()
-        if let cell = collectionView.cellForItem(at: indexPath) {
-            cell.contentView.backgroundColor = UIColor.black
-        }
         delegate?.movieCellHorizontalDelegate(didselect: cellVM)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         return UIEdgeInsets(top:10, left: 10, bottom: 10, right: 10)
-    }
-    
-    
-    func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
-        // Reset the background color of the deselected cell
-        if let cell = collectionView.cellForItem(at: indexPath) {
-            cell.contentView.backgroundColor = UIColor.clear
-        }
     }
     
 }

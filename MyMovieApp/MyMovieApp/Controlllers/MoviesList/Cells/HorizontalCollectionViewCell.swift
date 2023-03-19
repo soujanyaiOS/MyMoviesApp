@@ -26,8 +26,14 @@ class HorizontalCollectionViewCell: UICollectionViewCell {
         return img
     }()
     
+    var movieID: Int = -1
+
     var cellViewModel: MovieDetails? {
         didSet {
+            self.containerView.layer.borderWidth = 0
+            if movieID  == cellViewModel?.id {
+                self.containerView.layer.borderWidth = 2
+            }
             nameLabel.text = cellViewModel?.title
             let endpoint = APIEndpoint.movieImage(id: cellViewModel?.poster_path ?? "")
             

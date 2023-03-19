@@ -54,8 +54,7 @@ class DetailsViewController: UIViewController {
             let endpoint = APIEndpoint.movieImage(id: movieItem?.backdrop_path ?? "")
             
             self.movieImageView.sd_setImage(with: endpoint.url, placeholderImage: placeholderImage, options: SDWebImageOptions(rawValue: 0), completed: { (image, error, cacheType, imageURL) in
-                if( error != nil)
-                {
+                if( error != nil) {
                     debugPrint("Error loading image" )
                 }
             })
@@ -84,8 +83,6 @@ class DetailsViewController: UIViewController {
         self.view.addSubview(detailsStackView)
         
         detailsStackView.anchorView(top: movieImageView.bottomAnchor, left: view.leadingAnchor, right: view.trailingAnchor, paddingTop: self.view.frame.height/4, paddingLeft: 10, paddingRight: 10, bottom: view.bottomAnchor)
-        
-        
     }
     
     

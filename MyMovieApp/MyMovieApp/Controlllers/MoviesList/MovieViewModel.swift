@@ -16,6 +16,7 @@ final class MovieViewModel {
     weak var coordinator : AppCoordinator!
     var reloadTableView: (() -> Void)?
     var movies = MoviesList()
+   
     var sections = [MovieSection]() {
         didSet {
             reloadTableView?()
@@ -34,17 +35,14 @@ final class MovieViewModel {
         self.postApiService = postApiService
     }
     
-    
-    
-    var selectedMovieId = 0
+    var selectedMovieId : Int = -1 {
+        didSet {
+            reloadTableView?()
+        }
+    }
     
     func didSelectRowAt(movieId: Int) {
         selectedMovieId = movieId
-    }
-    
-    
-    func backgroundColor(forMovieId movieId: Int) -> UIColor {
-        return selectedMovieId == movieId ? UIColor.lightGray : UIColor.clear
     }
     
     func getMovies() {
@@ -90,7 +88,7 @@ final class MovieViewModel {
         sections = [
             MovieSection(name: "Favourites", movies: self.sorMoviesByRatingName(movies: self.favoritesList)),
             MovieSection(name: "Watched", movies: self.sorMoviesByRatingName(movies: self.watchedMoview)),
-            MovieSection(name: "To Watch", movies: self.sorMoviesByRatingName(movies: self.watchedMoview))
+            MovieSection(name: "To Watch", movies: self.sorMoviesByRatingName(movies: self.toWatchMoview))
             
         ]
     }
@@ -108,7 +106,6 @@ final class MovieViewModel {
         }
         return movieList
     }
-    
     
     
     func getCellViewModel(at indexPath: IndexPath) -> MovieDetails {

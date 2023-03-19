@@ -68,11 +68,11 @@ class MyMovieAppTests: XCTestCase {
             self.viewModel.getFavourites()
             XCTAssertEqual(self.viewModel.sections.count, 3)
             XCTAssertEqual(self.viewModel.sections.first?.movies.count, 6)
-            XCTAssertEqual(self.viewModel.sections.last?.movies.count, 12)
+            XCTAssertEqual(self.viewModel.sections.last?.movies.count, 8)
             XCTAssertEqual(self.viewModel.sections.first?.movies.first?.title, "Free Guy")
-            XCTAssertEqual(self.viewModel.sections.last?.movies.first?.rating, 8.0)
-            XCTAssertEqual(self.viewModel.sections.last?.movies.first?.overview, "A bank teller called Guy realizes he is a background character in an open world video game called Free City that will soon go offline.")
-            XCTAssertEqual(self.viewModel.sections.last?.movies.first?.release_date, "2021-08-11")
+            XCTAssertEqual(self.viewModel.sections.last?.movies.first?.rating, 7.6)
+            XCTAssertEqual(self.viewModel.sections.last?.movies.first?.overview, "Peace and tranquility have set in Belogorie. The evil was defeated and Ivan is now enjoying his well-deserved fame. He is surrounded by his family, friends and small wonders from the modern world that help him lead a comfortable life. Luckily, he has his Magic Sword to cut a gap between the worlds to get some supplies quite regularly. But when an ancient evil rises and the existence of the magic world is put to danger, Ivan has to team up with his old friends and his new rivals. They will set out on a long journey beyond the known world to find a way to defeat the enemies and to return peace to Belogorie.")
+            XCTAssertEqual(self.viewModel.sections.last?.movies.first?.release_date, "2021-01-01")
             
         }
     }
